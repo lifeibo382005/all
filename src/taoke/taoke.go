@@ -30,11 +30,11 @@ func GetTaokeDetail(account, startTime, endTime string) (data []byte, err error)
     log.Info("request: %s, %s, %s", account, startTime, endTime)
 
     items := make([]ItemInfo, 0)
-    page := 0
+    page := 1
     for {
         have := false
 
-        searchurl := fmt.Sprintf("http://www.alimama.com/union/newreport/taobaokeDetail.htm?toPage=%d&perPageSize=2000&startTime=%s&endTime=%s", page, startTime, endTime)
+        searchurl := fmt.Sprintf("http://www.alimama.com/union/newreport/taobaokeDetail.htm?toPage=%d&perPageSize=20&startTime=%s&endTime=%s", page, startTime, endTime)
 
         body, err := common.GetPage(account, searchurl)
         if err != nil {
@@ -117,6 +117,8 @@ func GetTaokeDetail(account, startTime, endTime string) (data []byte, err error)
                     }
 
                     item.Date = string(td[i+1:])
+
+                    log.Info(item.Date)
 
                 case 2:
                     i = bytes.Index(td, []byte("id="))
