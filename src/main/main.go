@@ -40,9 +40,7 @@ func taokeHandler(w http.ResponseWriter, r *http.Request) {
     fmt.Fprintf(w, "{\"error\":0, \"data\":%s}", string(b))
 }
 
-
-func main() {
-
+func run() {
     if err := common.Login(); err != nil {
         log.Error(err)
         ErrorExit()
@@ -56,9 +54,16 @@ func main() {
 
     http.HandleFunc("/taoke", taokeHandler)
 
-    e = http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
-    if e != nil {
-        log.Error(e)
-        ErrorExit()
+    for {
+        e = http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
+        if e != nil {
+            log.Error(e)
+        }
+
+        time.Sleep(time.Second)
     }
+}
+
+func main() {
+    run()
 }
