@@ -31,19 +31,14 @@ func (tc *TaokeClient) keepalive() {
 var HttpClient map[string]*TaokeClient = make(map[string]*TaokeClient)
 
 
-func Login() error {
-
-    ustr, err := Conf.String("taoke", "taobaoke_detail_url", "http://www.alimama.com/")
-    if err != nil {
-        return err
-    }
+func Login(site, ustr string) error {
 
     u, err := url.Parse(ustr)
     if err != nil {
         return err
     }
 
-    accountstr, err := Conf.String("taoke", "accounts", "")
+    accountstr, err := Conf.String(site, "accounts", "")
     if err != nil {
         return err
     }
@@ -64,7 +59,7 @@ func Login() error {
             return errors.New("Cookies not found in config.")
         }
 
-        log.Info("Read url and cookie from config.")
+        log.Info("Read url and cookie from config of %s.", site)
 
         cos := strings.Split(cookiestr, ";")
 
@@ -72,14 +67,14 @@ func Login() error {
 
         for _, co := range(cos) {
 
-            pairs := strings.Split(co, "=")
-            if len(pairs) != 2 {
+            in := strings.Index(co, "=")
+            if in == -1 {
                 return errors.New("Invalid cookies")
             }
 
             c := &http.Cookie{
-                Name:pairs[0],
-                Value:pairs[1],
+                Name:co[:in],
+                Value:co[in+1:],
                 Raw:co,
             }
             cookies = append(cookies, c)
