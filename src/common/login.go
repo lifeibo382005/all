@@ -15,6 +15,7 @@ import (
 
 type TaokeClient struct {
     http.Client
+    url string
 }
 
 
@@ -84,7 +85,7 @@ func Login(site, ustr string) error {
 
         jar.SetCookies(u, cookies)
 
-        tc := &TaokeClient{http.Client{Jar:jar}}
+        tc := &TaokeClient{http.Client{Jar:jar}, ustr}
         HttpClient[account] = tc
         tc.keepalive()
     }

@@ -55,7 +55,7 @@ func GetTaokeDetail(account, startTime, endTime string) (data []byte, err error)
         /* when parse error, log page */
         defer func() {
             if data == nil {
-                log.Error(string(body))
+/*                log.Error(string(body))*/
             }
         }()
 
@@ -117,8 +117,6 @@ func GetTaokeDetail(account, startTime, endTime string) (data []byte, err error)
                     }
 
                     item.Date = string(td[i+1:])
-
-                    log.Info(item.Date)
 
                 case 2:
                     i = bytes.Index(td, []byte("id="))
@@ -232,6 +230,9 @@ func GetTaokeDetail(account, startTime, endTime string) (data []byte, err error)
                     item.State = string(td[:i])
 
                 case 6:
+                    continue
+
+                case 7:
                     i = bytes.Index(td, []byte("/i>"))
                     if i == -1 {
                         return nil, errors.New("16parse taoke detail page failed")
@@ -245,7 +246,7 @@ func GetTaokeDetail(account, startTime, endTime string) (data []byte, err error)
                     }
 
                     item.Transaction = string(td[:i])
-                case 7:
+                case 8:
                     i = bytes.Index(td, []byte("2\">"))
                     if i == -1 {
                         return nil, errors.New("18parse taoke detail page failed")
@@ -259,7 +260,11 @@ func GetTaokeDetail(account, startTime, endTime string) (data []byte, err error)
                     }
 
                     item.Commission = string(td[:i])
-                case 8:
+                case 9:
+                    continue
+                case 10:
+                    continue
+                case 11:
                     i = bytes.Index(td, []byte("/i>"))
                     if i == -1 {
                         return nil, errors.New("20parse taoke detail page failed")
@@ -274,7 +279,6 @@ func GetTaokeDetail(account, startTime, endTime string) (data []byte, err error)
 
                     item.Income = string(td[:i])
                 }
-
             }
 
             have = true
