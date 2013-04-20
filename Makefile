@@ -12,3 +12,7 @@ win:
 	echo "bin\\\\taoke.exe" >> taoke/run.bat
 	zip -r taoke.zip taoke/*
 	rm -rf taoke
+
+linux:
+	export GOPATH=`pwd` && export CGO_ENABLED=0 && export GOARCH=amd64 && export GOOS=linux && go build -o ./bin/taoke main
+	scp ./bin/taoke lizi@10.232.4.31:~

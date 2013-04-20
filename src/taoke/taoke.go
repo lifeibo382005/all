@@ -55,7 +55,7 @@ func GetTaokeDetail(account, startTime, endTime string) (data []byte, err error)
         /* when parse error, log page */
         defer func() {
             if data == nil {
-/*                log.Error(string(body))*/
+                log.Error(string(body))
             }
         }()
 

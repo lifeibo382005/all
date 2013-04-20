@@ -103,7 +103,9 @@ func GetPage(account, u string) (body []byte, err error) {
         return nil, errors.New(fmt.Sprintf("account '%s' notfound", account))
     }
 
-    resp, e := client.Get(u)
+    req, err := http.NewRequest("GET", u, nil)
+    req.Header.Add("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17")
+    resp, e := client.Do(req)
     if e != nil {
         return nil, e
     }

@@ -7,14 +7,10 @@ import (
     "archive/zip"
     "bytes"
     "io/ioutil"
+    "encoding/json"
     "github.com/mahonia"
     log "code.google.com/p/log4go"
 )
-
-
-
-type ItemInfo struct {
-}
 
 func GetCPSDetail(account, startTime, endTime string) (data []byte, err error) {
     log.Info("request: %s, %s, %s", account, startTime, endTime)
@@ -58,5 +54,21 @@ func GetCPSDetail(account, startTime, endTime string) (data []byte, err error) {
         rc.Close()
     }
 
-    return body, nil
+    lines := bytes.Split(body, []byte("\n"))
+    lines = lines[:len(lines)-2]
+    items := make([][]string, len(lines))
+    for i, line := range(lines) {
+        cols := bytes.Split(line, []byte(","))
+        items[i] = make([]string, len(cols))
+        for j, col := range(cols) {
+            items[i][j] = string(col[1:len(col)-1])
+        }
+    }
+
+    data, err = json.Marshal(items)
+    if err != nil {
+        return nil, err
+    }
+
+    return data, nil
 }
