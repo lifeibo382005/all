@@ -19,7 +19,7 @@ type TaokeClient struct {
 }
 
 
-func (tc *TaokeClient) keepalive() {
+func (tc *TaokeClient) keepalive(sitek string) {
     go func() {
         for {
             time.Sleep(time.Second * 60)
@@ -32,7 +32,7 @@ func (tc *TaokeClient) keepalive() {
 var HttpClient map[string]*TaokeClient = make(map[string]*TaokeClient)
 
 
-func Login(site, ustr string) error {
+func Login(site, sitek, ustr string) error {
 
     u, err := url.Parse(ustr)
     if err != nil {
@@ -87,7 +87,7 @@ func Login(site, ustr string) error {
 
         tc := &TaokeClient{http.Client{Jar:jar}, ustr}
         HttpClient[account] = tc
-        tc.keepalive()
+        tc.keepalive(sitek)
     }
 
     log.Info("Parse cookie and url successed.")

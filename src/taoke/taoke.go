@@ -34,20 +34,26 @@ func GetTaokeDetail(account, startTime, endTime string) (data []byte, err error)
     for {
         have := false
 
-        searchurl := fmt.Sprintf("http://www.alimama.com/union/newreport/taobaokeDetail.htm?toPage=%d&perPageSize=20&startTime=%s&endTime=%s", page, startTime, endTime)
+        searchurl := fmt.Sprintf("http://u.alimama.com/union/newreport/taobaokeDetail.htm?toPage=%d&perPageSize=20&startTime=%s&endTime=%s", page, startTime, endTime)
+
+
+        log.Error(searchurl)
 
         body, err := common.GetPage(account, searchurl)
         if err != nil {
             return nil, err
         }
 
-        d:=mahonia.NewDecoder("gbk")
-        r := d.NewReader(bytes.NewBuffer(body))
-        body, _ = ioutil.ReadAll(r)
+        i := bytes.Index(body, []byte("charset=GBK"))
+        if i != -1 {
+            d:=mahonia.NewDecoder("gbk")
+            r := d.NewReader(bytes.NewBuffer(body))
+            body, _ = ioutil.ReadAll(r)
+        }
 
         /* login */
 
-        i := bytes.Index(body, []byte("<title>淘宝联盟-阿里妈妈登录页面</title>"))
+        i = bytes.Index(body, []byte("<title>阿里妈妈-阿里妈妈登录页面</title>"))
         if i != -1 {
             return nil, errors.New("account need login.")
         }

@@ -3,6 +3,7 @@ package main
 import (
     "os"
     "fmt"
+    "runtime"
     "net/http"
     "bufio"
     "time"
@@ -42,6 +43,8 @@ func cleanAll() {
     CacheLock.Lock()
     defer CacheLock.Unlock()
     Cache = make(map[string][]byte)
+
+    runtime.GC()
 }
 
 func cleanCache() {
@@ -108,12 +111,12 @@ func yiqifaHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func run() {
-    if err := common.Login("taoke", "http://www.alimama.com/"); err != nil {
+    if err := common.Login("taoke", "http://u.alimama.com","http://u.alimama.com/union/newreport/taobaokeDetail.htm"); err != nil {
         log.Error(err)
         ErrorExit()
     }
 
-    if err := common.Login("yiqifa", "http://www.yiqifa.com/"); err != nil {
+    if err := common.Login("yiqifa", "http://www.yiqifa.com/", "http://www.yiqifa.com/"); err != nil {
         log.Error(err)
         ErrorExit()
     }
